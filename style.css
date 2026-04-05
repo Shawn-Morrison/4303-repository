@@ -7,7 +7,12 @@
   height: 50px;
   background: red;
   border-radius: 50%;
+
   cursor: grab;
+}
+
+.ball:active {
+  cursor: grabbing;
 }
 
 .note {
@@ -19,7 +24,16 @@
   height: 100px;
   background: #ffe97a;
   border: 1px solid #d6c45c;
+
   box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: bold;
+  text-align: center;
+  padding: 5px;
 }
 
 body {
@@ -147,4 +161,19 @@ footer {
 /* lamp light glow */
 #lamp.on {
   box-shadow: 0 0 50px 20px rgba(255, 255, 180, 0.6);
+}
+/* Centered desk title */
+.desk-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  font-size: 3rem;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.3);
+
+  pointer-events: none; /* allows clicking through it */
+  user-select: none;
 }

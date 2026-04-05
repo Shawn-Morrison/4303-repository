@@ -23,9 +23,11 @@
   <!-- MAIN DESK AREA -->
   <main>
     <div id="desk">
+        <div class="desk-title">FidgetDesk</div>
+        
       <div id="lamp"></div>
       <div class="ball"></div>
-      <div class="note"></div>
+      <div class="note">My Notes</div>
     </div>
   </main>
 
@@ -42,6 +44,25 @@
     lamp.addEventListener("click", () => {
       lamp.classList.toggle("on");
     });
+  // DRAG BALL
+  const ball = document.querySelector(".ball");
+
+  let isDragging = false;
+
+  ball.addEventListener("mousedown", () => {
+    isDragging = true;
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    if (isDragging) {
+      ball.style.left = e.pageX - 25 + "px";
+      ball.style.top = e.pageY - 25 + "px";
+    }
+  });
+
+  document.addEventListener("mouseup", () => {
+    isDragging = false;
+  });
   </script>
 
 </body>
