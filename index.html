@@ -16,7 +16,17 @@
   <div class="nav-right">
     <button id="refreshBtn">Refresh Desk</button>
   </div>
+  <script>
+  document.getElementById("refreshBtn").addEventListener("click", () => {
+    alert("Desk refresh coming soon!");
+  });
+</script>
 </nav>
+<main>
+  <div id="desk">
+    <div id="lamp"></div>
+  </div>
+</main>
 <h1>FidgetDesk</h1>
     <p>FidgetDesk is a browser-based interactive experience that simulates a digital desktop filled with playful, physics-inspired objects. Users can click, drag, toss, and interact with items in real time, creating a satisfying and engaging environment designed for both entertainment and stress relief.</p>
 <h2>FidgetDesk was created to:</h2>
@@ -32,10 +42,12 @@
         <div class="note"></div>
         <div class="lamp"></div>
     </div>
-</body>
-<script>
-  document.getElementById("refreshBtn").addEventListener("click", () => {
-    alert("Desk refresh coming soon!");
+    <script>
+  const lamp = document.getElementById("lamp");
+
+  lamp.addEventListener("click", () => {
+    lamp.classList.toggle("on");
   });
 </script>
+</body>
 </html>
