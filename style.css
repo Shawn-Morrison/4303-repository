@@ -205,50 +205,91 @@ footer {
   box-shadow: 0 -5px 10px rgba(0,0,0,0.4);
 }
 
-/* Lamp base style */
+/* Lamp base */
 #lamp {
   position: absolute;
   bottom: 20px;
-  left: 50px;
+  left: 60px;
 
-  width: 40px;
+  width: 20px;
   height: 80px;
-  background-color: #444;
-  border-radius: 8px;
+  background: #444;
+  border-radius: 10px;
 
   cursor: pointer;
-  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+
+  /* subtle depth */
+  box-shadow: 3px 5px 10px rgba(0,0,0,0.4);
+
+  transition: all 0.3s ease;
 }
 
-/* simple lamp shade */
+#lamp:hover {
+  transform: scale(1.05);
+}
+
+/* Lamp arm */
 #lamp::before {
   content: "";
   position: absolute;
-  top: -30px;
-  left: -15px;
+  top: -50px;
+  left: 8px;
 
-  width: 70px;
-  height: 30px;
-  background-color: #666;
-  border-radius: 10px 10px 0 0;
+  width: 4px;
+  height: 50px;
+  background: #555;
+
+  transform: rotate(-25deg);
+  transform-origin: bottom;
 }
 
-/* lamp light glow */
-#lamp.on {
-  box-shadow: 0 0 50px 20px rgba(255, 255, 180, 0.6);
-}
-/* Centered desk title */
-.desk-title {
+/* Lamp shade */
+#lamp::after {
+  content: "";
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: -70px;
+  left: -20px;
 
-  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 30px;
 
-  font-size: 3rem;
-  font-weight: bold;
-  color: rgba(255, 255, 255, 0.3);
+  background: #666;
+  border-radius: 10px 10px 5px 5px;
+}
 
-  pointer-events: none; /* allows clicking through it */
-  user-select: none;
+/* Lamp ON state */
+
+#lamp.on::before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  left: -80px;
+
+  width: 200px;
+  height: 120px;
+
+  background: radial-gradient(
+    ellipse at top,
+    rgba(255,255,200,0.4),
+    rgba(255,255,200,0.1) 60%,
+    transparent 80%
+  );
+
+  pointer-events: none;
+}
+#lamp.on {
+  background: #666;
+}
+
+/* Glow effect (light hitting desk) */
+#lamp.on::after {
+  background: #888;
+}
+
+/* Light spread on desk */
+#lamp.on {
+  box-shadow:
+    0 0 40px 10px rgba(255, 255, 180, 0.3),
+    0 0 80px 30px rgba(255, 255, 180, 0.2),
+    3px 5px 10px rgba(0,0,0,0.4);
 }
