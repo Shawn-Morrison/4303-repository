@@ -45,18 +45,23 @@
       lamp.classList.toggle("on");
     });
   // DRAG BALL
-  const ball = document.querySelector(".ball");
+ const ball = document.querySelector(".ball");
 
   let isDragging = false;
+  let offsetX, offsetY;
 
-  ball.addEventListener("mousedown", () => {
+  ball.addEventListener("mousedown", (e) => {
     isDragging = true;
+
+    // calculate offset so it doesn't jump
+    offsetX = e.clientX - ball.offsetLeft;
+    offsetY = e.clientY - ball.offsetTop;
   });
 
   document.addEventListener("mousemove", (e) => {
     if (isDragging) {
-      ball.style.left = e.pageX - 25 + "px";
-      ball.style.top = e.pageY - 25 + "px";
+      ball.style.left = e.clientX - offsetX + "px";
+      ball.style.top = e.clientY - offsetY + "px";
     }
   });
 

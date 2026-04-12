@@ -3,16 +3,48 @@
   top: 100px;
   left: 200px;
 
-  width: 50px;
-  height: 50px;
-  background: red;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
 
   cursor: grab;
+
+  /* 3D shading */
+  background: radial-gradient(
+    circle at 30% 30%,
+    #ff6b6b,
+    #cc0000 70%
+  );
+
+  /* shine highlight */
+  box-shadow:
+    inset -8px -12px 20px rgba(0,0,0,0.4),
+    inset 6px 6px 10px rgba(255,255,255,0.3),
+    4px 6px 10px rgba(0,0,0,0.3);
+
+  transition: transform 0.1s ease;
 }
 
+/* when clicking */
 .ball:active {
   cursor: grabbing;
+  transform: scale(0.95);
+}
+
+.ball::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 70%;
+  height: 10px;
+
+  background: rgba(0,0,0,0.3);
+  border-radius: 50%;
+
+  filter: blur(3px);
 }
 
 .note {
