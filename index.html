@@ -73,6 +73,26 @@
   document.addEventListener("mouseup", () => {
     isDragging = false;
   });
+
+  // NOTEPAD TEAR FEATURE
+const notepad = document.querySelector(".notepad");
+
+notepad.addEventListener("mousedown", (e) => {
+  const topPage = notepad.querySelector(".page:last-child");
+
+  if (!topPage) return;
+
+  topPage.style.transform = "translateY(-20px) rotate(-5deg)";
+  topPage.style.transition = "0.2s";
+});
+
+document.addEventListener("mouseup", () => {
+  const pages = document.querySelectorAll(".notepad .page");
+
+  if (pages.length > 0) {
+    pages[pages.length - 1].remove(); // remove top page
+  }
+});
   </script>
 
 </body>
