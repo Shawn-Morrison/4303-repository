@@ -52,28 +52,53 @@
   // DRAG BALL
  const ball = document.querySelector(".ball");
 
-  let isDragging = false;
-  let offsetX, offsetY;
+let isDragging = false;
+let offsetX, offsetY;
 
-  ball.addEventListener("mousedown", (e) => {
-    isDragging = true;
+let velocityY = 0;
+let gravity = 0.5;
+let bounce = 0.7;
 
-    // calculate offset so it doesn't jump
-    offsetX = e.clientX - ball.offsetLeft;
-    offsetY = e.clientY - ball.offsetTop;
-  });
+ball.addEventListener("mousedown", (e) => {
+  isDragging = true;
 
-  document.addEventListener("mousemove", (e) => {
-    if (isDragging) {
-      ball.style.left = e.clientX - offsetX + "px";
-      ball.style.top = e.clientY - offsetY + "px";
-    }
-  });
+  offsetX = e.clientX - ball.offsetLeft;
+  offsetY = e.clientY - ball.offsetTop;
 
-  document.addEventListener("mouseup", () => {
-    isDragging = false;
-  });
+  velocityY = 0; // reset velocity while dragging
+});
 
+document.addEventListener("mousemove", (e) => {
+  if (isDragging) {
+    ball.style.left = e.clientX - offsetX + "px";
+    ball.style.top = e.clientY - offsetY + "px";
+  }
+});
+
+document.addEventListener("mouseup", () => {
+  isDragging = false;
+  applyGravity();
+});
+
+function applyGravity() {
+  if (isDragging) return;
+
+  let top = ball.offsetTop;
+  let desk = document.getElementById("desk");
+  let floor = desk.clientHeight - ball.offsetHeight;
+
+  velocityY += gravity;
+  top += velocityY;
+
+  if (top >= floor) {
+    top = floor;
+    velocityY *= -bounce;
+  }
+
+  ball.style.top = top + "px";
+
+  requestAnimationFrame(applyGravity);
+}
   // NOTEPAD TEAR FEATURE
 const notepad = document.querySelector(".notepad");
 
