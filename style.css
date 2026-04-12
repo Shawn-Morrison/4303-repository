@@ -47,26 +47,49 @@
   filter: blur(3px);
 }
 
-.note {
+/* Notepad container */
+.notepad {
   position: absolute;
   top: 80px;
   left: 320px;
 
-  width: 100px;
-  height: 100px;
-  background: #ffe97a;
+  width: 140px;
+  height: 180px;
+
+  background: #fdf5c9;
   border: 1px solid #d6c45c;
 
-  box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-weight: bold;
-  text-align: center;
-  padding: 5px;
+  box-shadow: 4px 6px 12px rgba(0,0,0,0.3);
+  overflow: hidden;
 }
+
+/* Header */
+.notepad-header {
+  background: #e6d98c;
+  padding: 5px;
+  text-align: center;
+  font-weight: bold;
+  border-bottom: 2px solid #cbbd6b;
+}
+
+/* Pages stacked */
+.page {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    white,
+    white 20px,
+    #eaeaea 21px
+  );
+}
+
+/* stack effect */
+.page:nth-child(2) { transform: translateY(2px); }
+.page:nth-child(3) { transform: translateY(4px); }
+.page:nth-child(4) { transform: translateY(6px); }
 
 body {
   font-family: Arial, sans-serif;
