@@ -73,17 +73,27 @@
 }
 
 /* Pages stacked */
+/* Pages stacked */
 .page {
   position: absolute;
   top: 30px;
   left: 0;
   width: 100%;
   height: 100%;
+  cursor: grab;
+
+  /* yellow paper */
   background: repeating-linear-gradient(
-    white,
-    white 20px,
-    #eaeaea 21px
+    #fff9a6,
+    #fff9a6 20px,
+    #e6dc7a 21px
   );
+
+  border-left: 4px solid red; /* margin line like real legal pad */
+}
+
+.page:active {
+  cursor: grabbing;
 }
 
 /* stack effect */
