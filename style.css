@@ -40,7 +40,9 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4;
+
+  /* wall color */
+  background: #d9d9d9;
 }
 
 header {
@@ -52,6 +54,9 @@ header {
 
 main {
   padding: 20px;
+
+  display: flex;
+  justify-content: center;
 }
 
 section {
@@ -122,12 +127,50 @@ footer {
   background-color: #777;
 }
 /* Desk area */
+#desk::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: radial-gradient(
+    circle at center,
+    rgba(255,255,255,0.1) 0%,
+    rgba(0,0,0,0.4) 100%
+  );
+
+  pointer-events: none;
+}
+
 #desk {
-  position: relative;
-  width: 100%;
-  height: 80vh;
-  background-color: #8b5a2b; /* wood color */
+  width: 90%;
+  max-width: 1000px;
+  height: 70vh;
+
+  /* Wood-like gradient */
+  background: linear-gradient(
+    90deg,
+    #8b5a2b 0%,
+    #7a4e24 25%,
+    #8b5a2b 50%,
+    #7a4e24 75%,
+    #8b5a2b 100%
+  );
+
   overflow: hidden;
+
+  /* subtle depth */
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
+}
+#desk::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20px;
+
+  background: #5a3a1a;
+  box-shadow: 0 -5px 10px rgba(0,0,0,0.4);
 }
 
 /* Lamp base style */
