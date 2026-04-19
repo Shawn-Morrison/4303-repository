@@ -16,4 +16,4 @@ Version Control & Repository: GitHub - I chose this because of it's popularity a
 Desktop Git Interface: GitHub Desktop - I was familiar with utilizing this tool to publish versions.
 Hosting Platform: GitHub Pages - This tools was chosen for familiarity, and mostly due to cost: *Free* 
 Languages: HTML, CSS, JavaScript **built from scratch to assist with learning fundamentals and symantics**
-AI Assistance: ChatGPT used for guidance, debugging, and learning support - This tool was chosen beecause familiarity and low cost. 
+AI Assistance: ChatGPT used for guidance, debugging, and learning support - This tool was chosen beecause familiarity and low cost. I recently adopted using CODEX by openAI because of it's more robust capabilities.

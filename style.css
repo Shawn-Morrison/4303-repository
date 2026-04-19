@@ -138,20 +138,20 @@ footer {
   pointer-events: none;
 }
 
-.desk-title {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: bold;
-  color: rgba(255, 255, 255, 0.6);
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
-  pointer-events: none;
-  user-select: none;
-  z-index: 10;
-  text-align: center;
+.desk-wrapper {
+  width: min(100%, 1000px);
 }
+
+.desk-label {
+  text-align: center;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  color: #3f2a18;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.35);
+}
+
 
 /* Ball */
 .ball {
@@ -235,14 +235,23 @@ footer {
   touch-action: none;
   user-select: none;
 
-  background: repeating-linear-gradient(
-    #fff9a6,
-    #fff9a6 20px,
-    #e6dc7a 21px
-  );
-
-  border-left: 4px solid red;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 14%,
+      rgba(200, 50, 50, 0.9) 14%,
+      rgba(200, 50, 50, 0.9) 15%,
+      transparent 15%
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      #fff9a6,
+      #fff9a6 20px,
+      #e6dc7a 21px
+    );
 }
+
 
 .page:active {
   cursor: grabbing;
@@ -361,11 +370,6 @@ footer {
     min-height: 380px;
   }
 
-  .desk-title {
-    top: 10%;
-    transform: translate(-50%, 0);
-    font-size: clamp(1.6rem, 7vw, 2.2rem);
-  }
 
   .ball {
     width: 56px;
