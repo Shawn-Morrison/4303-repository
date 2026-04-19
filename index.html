@@ -81,7 +81,9 @@
   notepad.style.top = "14%";
 
   lamp.classList.remove("on");
-  splash.classList.remove("active");
+mug.classList.remove("spilled");
+splash.classList.remove("active");
+
 
   velocityY = 0;
   isFalling = false;
@@ -267,6 +269,7 @@ function checkCupSplash() {
 
 function triggerSplash() {
   splashTriggered = true;
+  mug.classList.add("spilled");
   splash.classList.remove("active");
   void splash.offsetWidth;
   splash.classList.add("active");
@@ -275,6 +278,7 @@ function triggerSplash() {
     splash.classList.remove("active");
   }, 900);
 }
+
 
 
     /* =========================
