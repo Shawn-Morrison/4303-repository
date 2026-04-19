@@ -1,113 +1,13 @@
-.ball {
-  position: absolute;
-  top: 100px;
-  left: 200px;
-
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-
-  cursor: grab;
-
-  /* 3D shading */
-  background: radial-gradient(
-    circle at 30% 30%,
-    #ff6b6b,
-    #cc0000 70%
-  );
-
-  /* shine highlight */
-  box-shadow:
-    inset -8px -12px 20px rgba(0,0,0,0.4),
-    inset 6px 6px 10px rgba(255,255,255,0.3),
-    4px 6px 10px rgba(0,0,0,0.3);
-
-  transition: transform 0.1s ease;
+* {
+  box-sizing: border-box;
 }
-
-/* when clicking */
-.ball:active {
-  cursor: grabbing;
-  transform: scale(0.95);
-}
-
-.ball::after {
-  content: "";
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-
-  width: 70%;
-  height: 10px;
-
-  background: rgba(0,0,0,0.3);
-  border-radius: 50%;
-
-  filter: blur(3px);
-}
-
-/* Notepad container */
-.notepad {
-  position: absolute;
-  top: 80px;
-  left: 320px;
-
-  width: 140px;
-  height: 180px;
-
-  background: #fdf5c9;
-  border: 1px solid #d6c45c;
-
-  box-shadow: 4px 6px 12px rgba(0,0,0,0.3);
-  overflow: hidden;
-}
-
-/* Header */
-.notepad-header {
-  background: #e6d98c;
-  padding: 5px;
-  text-align: center;
-  font-weight: bold;
-  border-bottom: 2px solid #cbbd6b;
-}
-
-/* Pages stacked */
-/* Pages stacked */
-.page {
-  position: absolute;
-  top: 30px;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  cursor: grab;
-
-  /* yellow paper */
-  background: repeating-linear-gradient(
-    #fff9a6,
-    #fff9a6 20px,
-    #e6dc7a 21px
-  );
-
-  border-left: 4px solid red; /* margin line like real legal pad */
-}
-
-.page:active {
-  cursor: grabbing;
-}
-
-/* stack effect */
-.page:nth-child(2) { transform: translateY(2px); }
-.page:nth-child(3) { transform: translateY(4px); }
-.page:nth-child(4) { transform: translateY(6px); }
 
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-
-  /* wall color */
   background: #d9d9d9;
+  overflow-x: hidden;
 }
 
 header {
@@ -119,7 +19,6 @@ header {
 
 main {
   padding: 20px;
-
   display: flex;
   justify-content: center;
 }
@@ -137,29 +36,27 @@ footer {
   padding: 10px;
   background-color: #ddd;
 }
-/* Navbar container */
+
+/* Navbar */
 .navbar {
   position: sticky;
   top: 0;
   width: 100%;
-  box-sizing: border-box;
-
   background-color: #333;
   color: white;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-
+  gap: 12px;
   padding: 10px 20px;
   z-index: 1000;
 }
 
-/* Left side links */
 .nav-left {
   display: flex;
   align-items: center;
   gap: 15px;
+  flex-wrap: wrap;
 }
 
 .nav-left a {
@@ -172,7 +69,6 @@ footer {
   text-decoration: underline;
 }
 
-/* Right side button */
 .nav-right {
   display: flex;
   align-items: center;
@@ -191,27 +87,17 @@ footer {
 .nav-right button:hover {
   background-color: #777;
 }
-/* Desk area */
-#desk::before {
-  content: "";
-  position: absolute;
-  inset: 0;
 
-  background: radial-gradient(
-    circle at center,
-    rgba(255,255,255,0.1) 0%,
-    rgba(0,0,0,0.4) 100%
-  );
-
-  pointer-events: none;
-}
-
+/* Desk */
 #desk {
-  width: 90%;
-  max-width: 1000px;
-  height: 70vh;
+  position: relative;
+  width: min(100%, 1000px);
+  height: min(72svh, 700px);
+  min-height: 420px;
+  max-height: 700px;
+  overflow: hidden;
+  border-radius: 14px;
 
-  /* Wood-like gradient */
   background: linear-gradient(
     90deg,
     #8b5a2b 0%,
@@ -221,11 +107,25 @@ footer {
     #8b5a2b 100%
   );
 
-  overflow: hidden;
+  box-shadow:
+    inset 0 0 40px rgba(0, 0, 0, 0.3),
+    0 10px 30px rgba(0, 0, 0, 0.2);
 
-  /* subtle depth */
-  box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
+  touch-action: none;
 }
+
+#desk::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  pointer-events: none;
+}
+
 #desk::after {
   content: "";
   position: absolute;
@@ -233,112 +133,271 @@ footer {
   left: 0;
   width: 100%;
   height: 20px;
-
   background: #5a3a1a;
-  box-shadow: 0 -5px 10px rgba(0,0,0,0.4);
+  box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
 }
+
 .desk-title {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
-  font-size: 3rem;
+  font-size: clamp(2rem, 5vw, 3rem);
   font-weight: bold;
   color: rgba(255, 255, 255, 0.6);
-text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
   pointer-events: none;
   user-select: none;
-
-  z-index: 10; /* 👈 THIS FIXES IT */
+  z-index: 10;
+  text-align: center;
 }
 
-/* Lamp base */
+/* Ball */
+.ball {
+  position: absolute;
+  top: 18%;
+  left: 20%;
+  width: clamp(52px, 8vw, 60px);
+  height: clamp(52px, 8vw, 60px);
+  border-radius: 50%;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+
+  background: radial-gradient(
+    circle at 30% 30%,
+    #ff6b6b,
+    #cc0000 70%
+  );
+
+  box-shadow:
+    inset -8px -12px 20px rgba(0, 0, 0, 0.4),
+    inset 6px 6px 10px rgba(255, 255, 255, 0.3),
+    4px 6px 10px rgba(0, 0, 0, 0.3);
+
+  transition: transform 0.1s ease;
+  z-index: 20;
+}
+
+.ball:active {
+  cursor: grabbing;
+  transform: scale(0.95);
+}
+
+.ball::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  filter: blur(3px);
+}
+
+/* Notepad */
+.notepad {
+  position: absolute;
+  top: 14%;
+  left: 55%;
+  width: clamp(120px, 24vw, 150px);
+  height: clamp(160px, 30vw, 190px);
+  background: #fdf5c9;
+  border: 1px solid #d6c45c;
+  box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  z-index: 15;
+  touch-action: none;
+  user-select: none;
+}
+
+.notepad-header {
+  position: relative;
+  z-index: 2;
+  background: #e6d98c;
+  padding: 6px;
+  text-align: center;
+  font-weight: bold;
+  border-bottom: 2px solid #cbbd6b;
+  font-size: clamp(0.8rem, 2.2vw, 1rem);
+}
+
+.page {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 30px);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+
+  background: repeating-linear-gradient(
+    #fff9a6,
+    #fff9a6 20px,
+    #e6dc7a 21px
+  );
+
+  border-left: 4px solid red;
+}
+
+.page:active {
+  cursor: grabbing;
+}
+
+.page:nth-child(2) {
+  transform: translateY(2px);
+}
+
+.page:nth-child(3) {
+  transform: translateY(4px);
+}
+
+.page:nth-child(4) {
+  transform: translateY(6px);
+}
+
+.dragged-page {
+  position: absolute;
+  z-index: 1000;
+  transform: rotate(-5deg);
+  box-shadow: 8px 10px 18px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+
+/* Lamp */
 #lamp {
   position: absolute;
   bottom: 20px;
-  left: 60px;
-
+  left: clamp(24px, 6vw, 60px);
   width: 20px;
   height: 80px;
   background: #444;
   border-radius: 10px;
-
   cursor: pointer;
-
-  /* subtle depth */
-  box-shadow: 3px 5px 10px rgba(0,0,0,0.4);
-
+  box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.4);
   transition: all 0.3s ease;
+  z-index: 12;
 }
 
 #lamp:hover {
   transform: scale(1.05);
 }
 
-/* Lamp arm */
 #lamp::before {
   content: "";
   position: absolute;
   top: -50px;
   left: 8px;
-
   width: 4px;
   height: 50px;
   background: #555;
-
   transform: rotate(-25deg);
   transform-origin: bottom;
 }
 
-/* Lamp shade */
 #lamp::after {
   content: "";
   position: absolute;
   top: -70px;
   left: -20px;
-
   width: 60px;
   height: 30px;
-
   background: #666;
   border-radius: 10px 10px 5px 5px;
 }
-
-/* Lamp ON state */
 
 #lamp.on::before {
   content: "";
   position: absolute;
   top: -40px;
   left: -80px;
-
   width: 200px;
   height: 120px;
-
   background: radial-gradient(
     ellipse at top,
-    rgba(255,255,200,0.4),
-    rgba(255,255,200,0.1) 60%,
+    rgba(255, 255, 200, 0.4),
+    rgba(255, 255, 200, 0.1) 60%,
     transparent 80%
   );
-
   pointer-events: none;
 }
+
 #lamp.on {
   background: #666;
+  box-shadow:
+    0 0 40px 10px rgba(255, 255, 180, 0.3),
+    0 0 80px 30px rgba(255, 255, 180, 0.2),
+    3px 5px 10px rgba(0, 0, 0, 0.4);
 }
 
-/* Glow effect (light hitting desk) */
 #lamp.on::after {
   background: #888;
 }
 
-/* Light spread on desk */
-#lamp.on {
-  box-shadow:
-    0 0 40px 10px rgba(255, 255, 180, 0.3),
-    0 0 80px 30px rgba(255, 255, 180, 0.2),
-    3px 5px 10px rgba(0,0,0,0.4);
+/* Mobile */
+@media (max-width: 768px) {
+  main {
+    padding: 12px;
+  }
+
+  .navbar {
+    padding: 10px 14px;
+    flex-wrap: wrap;
+  }
+
+  .nav-left,
+  .nav-right {
+    width: 100%;
+    justify-content: center;
+  }
+
+  #desk {
+    width: 100%;
+    height: 70svh;
+    min-height: 380px;
+  }
+
+  .desk-title {
+    top: 10%;
+    transform: translate(-50%, 0);
+    font-size: clamp(1.6rem, 7vw, 2.2rem);
+  }
+
+  .ball {
+    width: 56px;
+    height: 56px;
+  }
+
+  .notepad {
+    width: 132px;
+    height: 168px;
+  }
+
+  #lamp {
+    left: 28px;
+    bottom: 18px;
+    transform: scale(0.92);
+    transform-origin: bottom left;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-left a,
+  .nav-right button {
+    font-size: 0.95rem;
+  }
+
+  #desk {
+    height: 68svh;
+    min-height: 340px;
+    border-radius: 10px;
+  }
+
+  .notepad {
+    left: 50%;
+  }
 }
