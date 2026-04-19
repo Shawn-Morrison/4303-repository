@@ -277,6 +277,157 @@ footer {
   pointer-events: none;
 }
 
+.mug {
+  position: absolute;
+  right: 90px;
+  bottom: 26px;
+  width: 110px;
+  height: 95px;
+  background: linear-gradient(to bottom, #ffffff 0%, #f2f2f2 100%);
+  border: 3px solid #d7d7d7;
+  border-radius: 0 0 18px 18px;
+  box-shadow:
+    inset -10px -10px 16px rgba(0, 0, 0, 0.08),
+    inset 8px 8px 12px rgba(255, 255, 255, 0.9),
+    6px 8px 14px rgba(0, 0, 0, 0.22);
+  z-index: 14;
+  overflow: visible;
+}
+
+.mug::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  height: 10px;
+  border-top: 3px solid #d7d7d7;
+  border-radius: 50%;
+}
+
+.mug::after {
+  content: "";
+  position: absolute;
+  right: -22px;
+  top: 22px;
+  width: 28px;
+  height: 42px;
+  border: 7px solid #d7d7d7;
+  border-left: none;
+  border-radius: 0 22px 22px 0;
+  background: transparent;
+}
+
+.mug-water {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  width: calc(100% - 24px);
+  height: 20px;
+  background: linear-gradient(to bottom, rgba(145, 205, 255, 0.9), rgba(88, 155, 230, 0.95));
+  border-radius: 50%;
+  opacity: 0.85;
+}
+
+.mug-label {
+  position: absolute;
+  top: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  text-align: center;
+  font-weight: 800;
+  font-size: 0.92rem;
+  line-height: 1.05;
+  color: #111;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+
+.splash {
+  position: absolute;
+  right: 62px;
+  bottom: 82px;
+  width: 180px;
+  height: 120px;
+  pointer-events: none;
+  z-index: 30;
+  opacity: 0;
+}
+
+.splash.active {
+  opacity: 1;
+}
+
+.droplet {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 18px;
+  height: 26px;
+  background: radial-gradient(circle at 30% 30%, rgba(220, 245, 255, 0.95), rgba(80, 160, 235, 0.92));
+  border-radius: 50% 50% 55% 55%;
+  transform-origin: bottom center;
+  opacity: 0;
+}
+
+.splash.active .droplet {
+  animation: splash-pop 0.75s ease-out forwards;
+}
+
+.droplet-1 {
+  --dx: -70px;
+  --dy: -75px;
+  animation-delay: 0s;
+}
+
+.droplet-2 {
+  --dx: -42px;
+  --dy: -100px;
+  animation-delay: 0.03s;
+}
+
+.droplet-3 {
+  --dx: -8px;
+  --dy: -88px;
+  animation-delay: 0.05s;
+}
+
+.droplet-4 {
+  --dx: 16px;
+  --dy: -105px;
+  animation-delay: 0.02s;
+}
+
+.droplet-5 {
+  --dx: 52px;
+  --dy: -82px;
+  animation-delay: 0.04s;
+}
+
+.droplet-6 {
+  --dx: 78px;
+  --dy: -58px;
+  animation-delay: 0.01s;
+}
+
+@keyframes splash-pop {
+  0% {
+    transform: translate(-50%, 0) scale(0.3);
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(calc(-50% + var(--dx)), var(--dy)) scale(1);
+    opacity: 0;
+  }
+}
+
+
 /* Lamp */
 #lamp {
   position: absolute;
@@ -353,6 +504,33 @@ footer {
     padding: 12px;
   }
 
+  .mug {
+  right: 26px;
+  bottom: 22px;
+  width: 92px;
+  height: 80px;
+}
+
+.mug::after {
+  right: -18px;
+  top: 18px;
+  width: 24px;
+  height: 36px;
+}
+
+.mug-label {
+  top: 30px;
+  font-size: 0.72rem;
+}
+
+.splash {
+  right: 6px;
+  bottom: 72px;
+  width: 150px;
+  height: 105px;
+}
+
+
   .navbar {
     padding: 10px 14px;
     flex-wrap: wrap;
@@ -394,6 +572,17 @@ footer {
   .nav-right button {
     font-size: 0.95rem;
   }
+
+  .mug {
+  right: 14px;
+  width: 84px;
+  height: 74px;
+}
+
+.mug-label {
+  font-size: 0.64rem;
+}
+
 
   #desk {
     height: 68svh;
