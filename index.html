@@ -191,13 +191,41 @@ function applyGravity() {
   }
 
   let top = ball.offsetTop;
-  const floor = desk.clientHeight - ball.offsetHeight;
+  let left = ball.offsetLeft;
+
+  const deskFloor = desk.clientHeight - ball.offsetHeight;
+
+  const mugLeft = mug.offsetLeft;
+  const mugRight = mug.offsetLeft + mug.offsetWidth;
+  const mugInnerLeft = mugLeft + mug.offsetWidth * 0.2;
+  const mugInnerRight = mugRight - mug.offsetWidth * 0.2;
+  const mugCatchTop = mug.offsetTop + mug.offsetHeight * 0.18;
+
+  const ballCenterX = left + ball.offsetWidth / 2;
+  const overMugOpening = ballCenterX > mugInnerLeft && ballCenterX < mugInnerRight;
+
+  let floor = deskFloor;
+  let landedInMug = false;
+
+  if (overMugOpening) {
+    floor = mugCatchTop - ball.offsetHeight * 0.35;
+    landedInMug = true;
+  }
 
   velocityY += gravity;
   top += velocityY;
 
   if (top >= floor) {
     top = floor;
+
+    if (landedInMug) {
+      velocityY = 0;
+      isFalling = false;
+      ball.style.top = top + "px";
+      checkCupSplash();
+      return;
+    }
+
     velocityY *= -bounce;
 
     if (Math.abs(velocityY) < 1) {
@@ -213,6 +241,7 @@ function applyGravity() {
   checkCupSplash();
   requestAnimationFrame(applyGravity);
 }
+
 
 function checkCupSplash() {
   if (splashTriggered) return;
