@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <!-- NAVBAR -->
   <nav class="navbar">
     <div class="nav-left">
@@ -16,170 +15,249 @@
     </div>
 
     <div class="nav-right">
-      <button id="refreshBtn">Refresh Desk</button>
+      <button id="refreshBtn" type="button">Refresh Desk</button>
     </div>
   </nav>
 
   <!-- MAIN DESK AREA -->
   <main>
     <div id="desk">
-        <div class="desk-title">FidgetDesk</div>
-        
-      <div id="lamp"></div>
-      <div class="ball"></div>
-      <div class="notepad">
-  <div class="notepad-header">My Notes</div>
-  <div class="page"></div>
-  <div class="page"></div>
-  <div class="page"></div>
-</div>
+      <div class="desk-title">FidgetDesk</div>
+
+      <div id="lamp" aria-label="Toggle lamp" role="button" tabindex="0"></div>
+
+      <div class="ball" aria-label="Ball"></div>
+
+      <div class="notepad" aria-label="Notepad">
+        <div class="notepad-header">My Notes</div>
+        <div class="page"></div>
+        <div class="page"></div>
+        <div class="page"></div>
+      </div>
     </div>
   </main>
 
-  <!-- SCRIPTS -->
- <script>
-/* =========================
-   GLOBAL ELEMENTS
-========================= */
-const desk = document.getElementById("desk");
+  <script>
+    const desk = document.getElementById("desk");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const lamp = document.getElementById("lamp");
+    const ball = document.querySelector(".ball");
+    const notepad = document.querySelector(".notepad");
 
-/* =========================
-   NAVBAR BUTTON
-========================= */
-document.getElementById("refreshBtn").addEventListener("click", () => {
-  alert("Desk refresh coming soon!");
-});
-
-/* =========================
-   LAMP LOGIC
-========================= */
-const lamp = document.getElementById("lamp");
-
-lamp.addEventListener("click", () => {
-  lamp.classList.toggle("on");
-});
-
-/* =========================
-   BALL (DRAG + GRAVITY)
-========================= */
-const ball = document.querySelector(".ball");
-
-let isDraggingBall = false;
-let ballOffsetX = 0;
-let ballOffsetY = 0;
-
-let velocityY = 0;
-let gravity = 0.5;
-let bounce = 0.7;
-let isFalling = false;
-
-ball.addEventListener("mousedown", (e) => {
-  isDraggingBall = true;
-
-  ballOffsetX = e.clientX - ball.offsetLeft;
-  ballOffsetY = e.clientY - ball.offsetTop;
-
-  velocityY = 0;
-});
-
-document.addEventListener("mousemove", (e) => {
-  if (isDraggingBall) {
-    ball.style.left = e.clientX - ballOffsetX + "px";
-    ball.style.top = e.clientY - ballOffsetY + "px";
-  }
-});
-
-document.addEventListener("mouseup", () => {
-  if (isDraggingBall) {
-    isDraggingBall = false;
-
-    if (!isFalling) {
-      isFalling = true;
-      applyGravity();
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
     }
-  }
-});
 
-function applyGravity() {
-  if (isDraggingBall) {
-    isFalling = false;
-    return;
-  }
+    function getDeskRect() {
+      return desk.getBoundingClientRect();
+    }
 
-  let top = ball.offsetTop;
-  let floor = desk.clientHeight - ball.offsetHeight;
+    function resetDeskItems() {
+      ball.style.left = "20%";
+      ball.style.top = "18%";
 
-  velocityY += gravity;
-  top += velocityY;
+      notepad.style.left = "55%";
+      notepad.style.top = "14%";
 
-  if (top >= floor) {
-    top = floor;
-    velocityY *= -bounce;
-
-    // stop tiny bounce
-    if (Math.abs(velocityY) < 1) {
+      lamp.classList.remove("on");
+      velocityY = 0;
       isFalling = false;
-      return;
+
+      const missingPages = 3 - notepad.querySelectorAll(".page").length;
+      for (let i = 0; i < missingPages; i++) {
+        const page = document.createElement("div");
+        page.className = "page";
+        notepad.appendChild(page);
+      }
     }
-  }
 
-  ball.style.top = top + "px";
+    refreshBtn.addEventListener("click", resetDeskItems);
 
-  requestAnimationFrame(applyGravity);
-}
+    lamp.addEventListener("click", () => {
+      lamp.classList.toggle("on");
+    });
 
-/* =========================
-   NOTEPAD (TEAR + DRAG)
-========================= */
-const notepad = document.querySelector(".notepad");
+    lamp.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        lamp.classList.toggle("on");
+      }
+    });
 
-let activePage = null;
-let pageOffsetX = 0;
-let pageOffsetY = 0;
+    /* =========================
+       BALL (DRAG + GRAVITY)
+    ========================= */
+    let isDraggingBall = false;
+    let ballPointerId = null;
+    let ballOffsetX = 0;
+    let ballOffsetY = 0;
 
-notepad.addEventListener("mousedown", (e) => {
-  const topPage = notepad.querySelector(".page:last-child");
-  if (!topPage) return;
+    let velocityY = 0;
+    const gravity = 0.45;
+    const bounce = 0.68;
+    let isFalling = false;
 
-  // clone page
-  activePage = topPage.cloneNode(true);
+    ball.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
 
-  activePage.style.position = "absolute";
-  activePage.style.left = notepad.offsetLeft + "px";
-  activePage.style.top = notepad.offsetTop + "px";
-  activePage.style.width = notepad.offsetWidth + "px";
-  activePage.style.height = notepad.offsetHeight + "px";
-  activePage.style.zIndex = 1000;
-  activePage.style.transform = "rotate(-5deg)";
+      const deskRect = getDeskRect();
+      const ballRect = ball.getBoundingClientRect();
 
-  desk.appendChild(activePage);
+      isDraggingBall = true;
+      ballPointerId = e.pointerId;
+      ball.setPointerCapture(e.pointerId);
 
-  pageOffsetX = e.clientX - activePage.offsetLeft;
-  pageOffsetY = e.clientY - activePage.offsetTop;
-});
+      ballOffsetX = e.clientX - ballRect.left;
+      ballOffsetY = e.clientY - ballRect.top;
 
-document.addEventListener("mousemove", (e) => {
-  if (activePage) {
-    activePage.style.left = e.clientX - pageOffsetX + "px";
-    activePage.style.top = e.clientY - pageOffsetY + "px";
-  }
-});
+      velocityY = 0;
+      isFalling = false;
 
-document.addEventListener("mouseup", () => {
-  // remove dragged page
-  if (activePage) {
-    activePage.remove();
-    activePage = null;
+      const left = ballRect.left - deskRect.left;
+      const top = ballRect.top - deskRect.top;
 
-    // remove top page from stack
-    const pages = notepad.querySelectorAll(".page");
-    if (pages.length > 0) {
-      pages[pages.length - 1].remove();
+      ball.style.left = left + "px";
+      ball.style.top = top + "px";
+    });
+
+    ball.addEventListener("pointermove", (e) => {
+      if (!isDraggingBall || e.pointerId !== ballPointerId) return;
+
+      e.preventDefault();
+
+      const deskRect = getDeskRect();
+
+      const newLeft = clamp(
+        e.clientX - deskRect.left - ballOffsetX,
+        0,
+        desk.clientWidth - ball.offsetWidth
+      );
+
+      const newTop = clamp(
+        e.clientY - deskRect.top - ballOffsetY,
+        0,
+        desk.clientHeight - ball.offsetHeight
+      );
+
+      ball.style.left = newLeft + "px";
+      ball.style.top = newTop + "px";
+    });
+
+    function releaseBall(e) {
+      if (!isDraggingBall || e.pointerId !== ballPointerId) return;
+
+      isDraggingBall = false;
+      ballPointerId = null;
+
+      if (!isFalling) {
+        isFalling = true;
+        requestAnimationFrame(applyGravity);
+      }
     }
-  }
-});
-</script>
 
+    ball.addEventListener("pointerup", releaseBall);
+    ball.addEventListener("pointercancel", releaseBall);
 
+    function applyGravity() {
+      if (isDraggingBall) {
+        isFalling = false;
+        return;
+      }
+
+      let top = ball.offsetTop;
+      const floor = desk.clientHeight - ball.offsetHeight;
+
+      velocityY += gravity;
+      top += velocityY;
+
+      if (top >= floor) {
+        top = floor;
+        velocityY *= -bounce;
+
+        if (Math.abs(velocityY) < 1) {
+          velocityY = 0;
+          isFalling = false;
+          ball.style.top = floor + "px";
+          return;
+        }
+      }
+
+      ball.style.top = top + "px";
+      requestAnimationFrame(applyGravity);
+    }
+
+    /* =========================
+       NOTEPAD (TEAR + DRAG)
+    ========================= */
+    let activePage = null;
+    let activePagePointerId = null;
+    let pageOffsetX = 0;
+    let pageOffsetY = 0;
+
+    notepad.addEventListener("pointerdown", (e) => {
+      const topPage = notepad.querySelector(".page:last-child");
+      if (!topPage) return;
+
+      e.preventDefault();
+
+      const deskRect = getDeskRect();
+      const pageRect = topPage.getBoundingClientRect();
+
+      activePage = topPage.cloneNode(true);
+      activePagePointerId = e.pointerId;
+
+      activePage.classList.add("dragged-page");
+      activePage.style.left = pageRect.left - deskRect.left + "px";
+      activePage.style.top = pageRect.top - deskRect.top + "px";
+      activePage.style.width = pageRect.width + "px";
+      activePage.style.height = pageRect.height + "px";
+
+      desk.appendChild(activePage);
+
+      pageOffsetX = e.clientX - pageRect.left;
+      pageOffsetY = e.clientY - pageRect.top;
+
+      notepad.setPointerCapture(e.pointerId);
+    });
+
+    notepad.addEventListener("pointermove", (e) => {
+      if (!activePage || e.pointerId !== activePagePointerId) return;
+
+      e.preventDefault();
+
+      const newLeft = clamp(
+        e.clientX - getDeskRect().left - pageOffsetX,
+        0,
+        desk.clientWidth - activePage.offsetWidth
+      );
+
+      const newTop = clamp(
+        e.clientY - getDeskRect().top - pageOffsetY,
+        0,
+        desk.clientHeight - activePage.offsetHeight
+      );
+
+      activePage.style.left = newLeft + "px";
+      activePage.style.top = newTop + "px";
+    });
+
+    function releasePage(e) {
+      if (!activePage || e.pointerId !== activePagePointerId) return;
+
+      activePage.remove();
+      activePage = null;
+      activePagePointerId = null;
+
+      const pages = notepad.querySelectorAll(".page");
+      if (pages.length > 0) {
+        pages[pages.length - 1].remove();
+      }
+    }
+
+    notepad.addEventListener("pointerup", releasePage);
+    notepad.addEventListener("pointercancel", releasePage);
+
+    window.addEventListener("load", resetDeskItems);
+  </script>
 </body>
 </html>
