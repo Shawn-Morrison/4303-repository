@@ -227,25 +227,30 @@ function applyGravity() {
   top = floor;
 
   if (landedInMug) {
-    velocityY = 0;
-    isFalling = false;
-    isRolling = false;
+  velocityY = 0;
+  isFalling = false;
+  isRolling = false;
 
-    const mugCenterLeft = mug.offsetLeft + mug.offsetWidth / 2 - ball.offsetWidth / 2;
-    const settledTop = mug.offsetTop + mug.offsetHeight * 0.12;
+  const mugCenterLeft = mug.offsetLeft + mug.offsetWidth / 2 - ball.offsetWidth / 2;
+  const settledTop = mug.offsetTop + mug.offsetHeight * 0.12;
 
-    ball.style.left = clamp(
-      mugCenterLeft,
-      0,
-      desk.clientWidth - ball.offsetWidth
-    ) + "px";
+  checkCupSplash();
 
-    ball.style.top = settledTop + "px";
+  ball.style.left = clamp(
+    mugCenterLeft,
+    0,
+    desk.clientWidth - ball.offsetWidth
+  ) + "px";
+
+  ball.style.top = settledTop + "px";
+
+  setTimeout(() => {
     ball.classList.add("in-mug");
+  }, 140);
 
-    checkCupSplash();
-    return;
-  }
+  return;
+}
+
 
 
     velocityY *= -bounce;
