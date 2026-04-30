@@ -369,17 +369,11 @@ function triggerSplash() {
       activePage = topPage.cloneNode(true);
       activePagePointerId = e.pointerId;
 
-     activePage.classList.add("dragged-page");
-activePage.style.left = newLeft + "px";
-activePage.style.top = newTop + "px";
-
-const tilt = ((e.clientX % 30) - 15) * 0.15;
-activePage.style.transform = `rotate(${tilt - 8}deg) skewX(-3deg)`;
-
-activePage.style.width = pageRect.width + "px";
-activePage.style.height = pageRect.height + "px";
-activePage.style.transform = "rotate(-8deg) skewX(-3deg)";
-
+      activePage.classList.add("dragged-page");
+      activePage.style.left = pageRect.left - deskRect.left + "px";
+      activePage.style.top = pageRect.top - deskRect.top + "px";
+      activePage.style.width = pageRect.width + "px";
+      activePage.style.height = pageRect.height + "px";
 
       desk.appendChild(activePage);
 
