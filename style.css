@@ -176,9 +176,18 @@ footer {
     inset 6px 6px 10px rgba(255, 255, 255, 0.3),
     4px 6px 10px rgba(0, 0, 0, 0.3);
 
-  transition: transform 0.1s ease;
+  transition:
+    transform 0.18s ease,
+    left 0.18s ease,
+    top 0.18s ease;
   z-index: 20;
 }
+
+.ball.in-mug {
+  z-index: 13;
+  transform: scale(0.82);
+}
+
 
 .ball:active {
   cursor: grabbing;

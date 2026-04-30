@@ -83,11 +83,12 @@
   lamp.classList.remove("on");
 mug.classList.remove("spilled");
 splash.classList.remove("active");
+ball.classList.remove("in-mug");
 
-
-  velocityY = 0;
-  isFalling = false;
-  splashTriggered = false;
+velocityY = 0;
+isFalling = false;
+splashTriggered = false;
+isRolling = false;
 
   const missingPages = 3 - notepad.querySelectorAll(".page").length;
   for (let i = 0; i < missingPages; i++) {
@@ -123,6 +124,8 @@ splash.classList.remove("active");
     const bounce = 0.68;
     let isFalling = false;
     let splashTriggered = false;
+    let isRolling = false;
+
 
 
     ball.addEventListener("pointerdown", (e) => {
@@ -139,7 +142,10 @@ splash.classList.remove("active");
       ballOffsetY = e.clientY - ballRect.top;
 
       velocityY = 0;
-      isFalling = false;
+isFalling = false;
+isRolling = false;
+ball.classList.remove("in-mug");
+
 
       const left = ballRect.left - deskRect.left;
       const top = ballRect.top - deskRect.top;
@@ -218,25 +224,42 @@ function applyGravity() {
   top += velocityY;
 
   if (top >= floor) {
-    top = floor;
+  top = floor;
 
-    if (landedInMug) {
-      velocityY = 0;
-      isFalling = false;
-      ball.style.top = top + "px";
-      checkCupSplash();
-      return;
-    }
+  if (landedInMug) {
+    velocityY = 0;
+    isFalling = false;
+    isRolling = false;
+
+    const mugCenterLeft = mug.offsetLeft + mug.offsetWidth / 2 - ball.offsetWidth / 2;
+    const settledTop = mug.offsetTop + mug.offsetHeight * 0.12;
+
+    ball.style.left = clamp(
+      mugCenterLeft,
+      0,
+      desk.clientWidth - ball.offsetWidth
+    ) + "px";
+
+    ball.style.top = settledTop + "px";
+    ball.classList.add("in-mug");
+
+    checkCupSplash();
+    return;
+  }
+
 
     velocityY *= -bounce;
 
-    if (Math.abs(velocityY) < 1) {
-      velocityY = 0;
-      isFalling = false;
-      ball.style.top = floor + "px";
-      checkCupSplash();
-      return;
-    }
+if (Math.abs(velocityY) < 1) {
+  velocityY = 0;
+  isFalling = false;
+  ball.style.top = floor + "px";
+  ball.classList.remove("in-mug");
+  checkCupSplash();
+  startDeskRoll();
+  return;
+}
+
   }
 
   ball.style.top = top + "px";
@@ -277,6 +300,46 @@ function triggerSplash() {
   setTimeout(() => {
     splash.classList.remove("active");
   }, 900);
+
+  function startDeskRoll() {
+  if (isRolling) return;
+
+  isRolling = true;
+
+  const direction = Math.random() < 0.5 ? -1 : 1;
+  let speed = Math.random() * 1.8 + 1.2;
+  const friction = 0.94;
+  const floor = desk.clientHeight - ball.offsetHeight;
+
+  function rollStep() {
+    if (isDraggingBall || isFalling) {
+      isRolling = false;
+      return;
+    }
+
+    if (Math.abs(speed) < 0.15) {
+      isRolling = false;
+      return;
+    }
+
+    let left = ball.offsetLeft + direction * speed;
+    left = clamp(left, 0, desk.clientWidth - ball.offsetWidth);
+
+    if (left === 0 || left === desk.clientWidth - ball.offsetWidth) {
+      isRolling = false;
+      return;
+    }
+
+    ball.style.left = left + "px";
+    ball.style.top = floor + "px";
+
+    speed *= friction;
+    requestAnimationFrame(rollStep);
+  }
+
+  requestAnimationFrame(rollStep);
+}
+
 }
 
 
