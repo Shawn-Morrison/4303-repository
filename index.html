@@ -15,6 +15,7 @@
     </div>
 
     <div class="nav-right">
+      <button id="soundBtn" class="icon-button" type="button" aria-label="Sound on" title="Sound on">🔊</button>
       <button id="refreshBtn" type="button">Refresh Desk</button>
     </div>
   </nav>
@@ -75,6 +76,7 @@
   <script>
     const desk = document.getElementById("desk");
     const refreshBtn = document.getElementById("refreshBtn");
+    const soundBtn = document.getElementById("soundBtn");
     const lamp = document.getElementById("lamp");
     const ball = document.querySelector(".ball");
     const notepad = document.querySelector(".notepad");
@@ -82,6 +84,8 @@
     const splash = document.getElementById("splash");
     const racer = document.getElementById("racer");
     const notePageCount = 8;
+    let soundEnabled = true;
+    let audioContext = null;
 
 
     function clamp(value, min, max) {
@@ -90,6 +94,109 @@
 
     function getDeskRect() {
       return desk.getBoundingClientRect();
+    }
+
+    function getAudioContext() {
+      if (!soundEnabled) return null;
+
+      const AudioCtor = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtor) return null;
+
+      if (!audioContext) {
+        audioContext = new AudioCtor();
+      }
+
+      if (audioContext.state === "suspended") {
+        audioContext.resume();
+      }
+
+      return audioContext;
+    }
+
+    function playTone(frequency, duration, options = {}) {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = options.type || "sine";
+      osc.frequency.setValueAtTime(frequency, now);
+
+      if (options.endFrequency) {
+        osc.frequency.exponentialRampToValueAtTime(options.endFrequency, now + duration);
+      }
+
+      gain.gain.setValueAtTime(options.volume || 0.14, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + duration);
+    }
+
+    function playNoise(duration, options = {}) {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      const sampleRate = ctx.sampleRate;
+      const buffer = ctx.createBuffer(1, sampleRate * duration, sampleRate);
+      const data = buffer.getChannelData(0);
+
+      for (let i = 0; i < data.length; i++) {
+        data[i] = (Math.random() * 2 - 1) * (1 - i / data.length);
+      }
+
+      const noise = ctx.createBufferSource();
+      const gain = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
+
+      filter.type = options.filterType || "bandpass";
+      filter.frequency.setValueAtTime(options.frequency || 900, ctx.currentTime);
+      filter.Q.setValueAtTime(options.q || 1.5, ctx.currentTime);
+
+      gain.gain.setValueAtTime(options.volume || 0.16, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+
+      noise.buffer = buffer;
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+      noise.start();
+      noise.stop(ctx.currentTime + duration);
+    }
+
+    function playClickSound() {
+      playTone(1500, 0.035, { type: "square", volume: 0.08, endFrequency: 650 });
+    }
+
+    function playKickballSound() {
+      playTone(115, 0.14, { type: "triangle", volume: 0.22, endFrequency: 70 });
+      setTimeout(() => playTone(68, 0.09, { type: "sine", volume: 0.11, endFrequency: 50 }), 30);
+    }
+
+    function playVroomSound() {
+      playTone(85, 0.55, { type: "sawtooth", volume: 0.16, endFrequency: 260 });
+      setTimeout(() => playNoise(0.32, { frequency: 180, filterType: "lowpass", volume: 0.08, q: 0.8 }), 40);
+    }
+
+    function playRipSound() {
+      playNoise(0.32, { frequency: 2400, volume: 0.16, q: 5 });
+      setTimeout(() => playNoise(0.16, { frequency: 1300, volume: 0.09, q: 3 }), 95);
+    }
+
+    function playSplashSound() {
+      playNoise(0.26, { frequency: 620, filterType: "lowpass", volume: 0.2, q: 0.9 });
+      setTimeout(() => playTone(420, 0.08, { type: "sine", volume: 0.06, endFrequency: 180 }), 45);
+    }
+
+    function updateSoundButton() {
+      soundBtn.textContent = soundEnabled ? "🔊" : "🔇";
+      soundBtn.setAttribute("aria-label", soundEnabled ? "Sound on" : "Sound off");
+      soundBtn.title = soundEnabled ? "Sound on" : "Sound off";
+      soundBtn.classList.toggle("muted", !soundEnabled);
     }
 
     function resetDeskItems() {
@@ -129,13 +236,20 @@ pullDistance = 0;
 
     refreshBtn.addEventListener("click", resetDeskItems);
 
+    soundBtn.addEventListener("click", () => {
+      soundEnabled = !soundEnabled;
+      updateSoundButton();
+    });
+
     lamp.addEventListener("click", () => {
+      playClickSound();
       lamp.classList.toggle("on");
     });
 
     lamp.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
+        playClickSound();
         lamp.classList.toggle("on");
       }
     });
@@ -279,9 +393,7 @@ function applyGravity() {
 
   return;
 }
-
-
-
+    playKickballSound();
     velocityY *= -bounce;
 
 if (Math.abs(velocityY) < 1) {
@@ -326,6 +438,7 @@ function checkCupSplash() {
 
 function triggerSplash() {
   splashTriggered = true;
+  playSplashSound();
   mug.classList.add("spilled");
   splash.classList.remove("active");
   void splash.offsetWidth;
@@ -334,8 +447,9 @@ function triggerSplash() {
   setTimeout(() => {
     splash.classList.remove("active");
   }, 900);
+}
 
-  function startDeskRoll() {
+function startDeskRoll() {
   if (isRolling) return;
 
   isRolling = true;
@@ -372,8 +486,6 @@ function triggerSplash() {
   }
 
   requestAnimationFrame(rollStep);
-}
-
 }
 
 /* =========================
@@ -462,6 +574,7 @@ function launchRacer() {
   if (isRacerMoving) return;
 
   isRacerMoving = true;
+  playVroomSound();
   racer.classList.add("racing");
 
   let speed = Math.max(8, pullDistance * 0.18 + 6);
@@ -571,6 +684,7 @@ window.addEventListener("resize", () => {
 
       const pages = notepad.querySelectorAll(".page");
       if (pages.length > 0) {
+        playRipSound();
         pages[pages.length - 1].remove();
       }
     }
