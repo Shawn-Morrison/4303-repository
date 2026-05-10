@@ -23,6 +23,7 @@
 <main>
   <section class="desk-wrapper">
     <div class="desk-label">FidgetDesk</div>
+    <div class="desk-subtitle">Click/tap to interact!</div>
 
     <div id="desk">
       <div id="lamp" aria-label="Toggle lamp" role="button" tabindex="0">
@@ -100,7 +101,8 @@
 
   racer.style.left = "140px";
   racer.style.top = "78%";
-  racer.classList.remove("racing");
+  racer.style.visibility = "visible";
+  racer.classList.remove("racing", "racer-gone");
 
 
   lamp.classList.remove("on");
@@ -395,7 +397,8 @@ function resetRacerPosition() {
   racerCurrentLeft = racerStartLeft;
   racer.style.left = racerStartLeft + "px";
   racer.style.top = racerStartTop + "px";
-  racer.classList.remove("racing");
+  racer.style.visibility = "visible";
+  racer.classList.remove("racing", "racer-gone");
   isRacerMoving = false;
   pullDistance = 0;
 }
@@ -483,9 +486,11 @@ function launchRacer() {
       return;
     }
 
-    setTimeout(() => {
-      resetRacerPosition();
-    }, 350);
+    racer.classList.remove("racing");
+    racer.classList.add("racer-gone");
+    racer.style.visibility = "hidden";
+    isRacerMoving = false;
+    pullDistance = 0;
   }
 
   requestAnimationFrame(raceStep);

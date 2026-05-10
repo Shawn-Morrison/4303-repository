@@ -148,8 +148,16 @@ footer {
   font-weight: 700;
   color: #3f2a18;
   letter-spacing: 0.04em;
-  margin-bottom: 12px;
+  margin-bottom: 2px;
   text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.desk-subtitle {
+  text-align: center;
+  color: #60401f;
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  font-weight: 700;
+  margin-bottom: 12px;
 }
 
 
