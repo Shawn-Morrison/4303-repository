@@ -534,69 +534,111 @@ footer {
   position: absolute;
   bottom: 20px;
   left: clamp(24px, 6vw, 60px);
-  width: 20px;
-  height: 80px;
-  background: #444;
-  border-radius: 10px;
+  width: 96px;
+  height: 128px;
+  background:
+    linear-gradient(90deg, #222, #707070 48%, #1f1f1f 100%) 42px 54px / 12px 58px no-repeat,
+    linear-gradient(#2f2f2f, #121212) 20px 108px / 60px 12px no-repeat,
+    radial-gradient(ellipse at center, #686868 0 34%, #2a2a2a 35% 68%, transparent 70%) 28px 102px / 44px 18px no-repeat;
+  border-radius: 8px;
   cursor: pointer;
-  box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.4);
+  filter: drop-shadow(4px 7px 8px rgba(0, 0, 0, 0.35));
+  isolation: isolate;
   transition: all 0.3s ease;
   z-index: 12;
 }
 
 #lamp:hover {
-  transform: scale(1.05);
+  transform: translateY(-2px) scale(1.03);
 }
 
 #lamp::before {
   content: "";
   position: absolute;
-  top: -50px;
-  left: 8px;
-  width: 4px;
-  height: 50px;
-  background: #555;
-  transform: rotate(-25deg);
-  transform-origin: bottom;
+  top: 28px;
+  left: 43px;
+  width: 10px;
+  height: 66px;
+  background: linear-gradient(90deg, #252525, #777 46%, #303030 100%);
+  border-radius: 999px;
+  box-shadow:
+    inset 2px 0 2px rgba(255, 255, 255, 0.22),
+    2px 3px 5px rgba(0, 0, 0, 0.25);
+  transform: rotate(-27deg);
+  transform-origin: bottom center;
 }
 
 #lamp::after {
   content: "";
   position: absolute;
-  top: -70px;
-  left: -20px;
-  width: 60px;
-  height: 30px;
-  background: #666;
-  border-radius: 10px 10px 5px 5px;
+  top: 10px;
+  left: 9px;
+  width: 72px;
+  height: 40px;
+  background:
+    linear-gradient(180deg, #7d7d7d 0%, #4d4d4d 58%, #272727 100%);
+  border-radius: 34px 34px 12px 12px;
+  clip-path: polygon(18% 0, 82% 0, 100% 100%, 0 100%);
+  box-shadow:
+    inset 0 7px 7px rgba(255, 255, 255, 0.16),
+    inset 0 -7px 8px rgba(0, 0, 0, 0.35),
+    0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-#lamp.on::before {
-  content: "";
+.lamp-bulb {
   position: absolute;
-  top: -40px;
-  left: -80px;
-  width: 200px;
-  height: 120px;
+  top: 43px;
+  left: 43px;
+  width: 12px;
+  height: 12px;
+  background: #f4d077;
+  border-radius: 50%;
+  box-shadow: inset -2px -3px 3px rgba(0, 0, 0, 0.2);
+  transform: translateX(-50%);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  z-index: 2;
+}
+
+.lamp-light {
+  position: absolute;
+  top: 45px;
+  left: 43px;
+  width: 210px;
+  height: 150px;
   background: radial-gradient(
     ellipse at top,
-    rgba(255, 255, 200, 0.4),
-    rgba(255, 255, 200, 0.1) 60%,
-    transparent 80%
+    rgba(255, 238, 155, 0.48),
+    rgba(255, 220, 110, 0.18) 52%,
+    rgba(255, 220, 110, 0) 76%
   );
+  clip-path: polygon(45% 0, 55% 0, 100% 100%, 0 100%);
+  opacity: 0;
   pointer-events: none;
+  transform: translateX(-50%);
+  transition: opacity 0.3s ease;
+  z-index: -1;
 }
 
 #lamp.on {
-  background: #666;
-  box-shadow:
-    0 0 40px 10px rgba(255, 255, 180, 0.3),
-    0 0 80px 30px rgba(255, 255, 180, 0.2),
-    3px 5px 10px rgba(0, 0, 0, 0.4);
+  filter:
+    drop-shadow(0 0 18px rgba(255, 226, 122, 0.32))
+    drop-shadow(4px 7px 8px rgba(0, 0, 0, 0.35));
 }
 
 #lamp.on::after {
-  background: #888;
+  background:
+    linear-gradient(180deg, #8d8d8d 0%, #5d5d5d 58%, #333 100%);
+}
+
+#lamp.on .lamp-bulb {
+  background: #fff4a8;
+  box-shadow:
+    0 0 18px 7px rgba(255, 236, 145, 0.72),
+    inset -2px -3px 3px rgba(150, 95, 0, 0.18);
+}
+
+#lamp.on .lamp-light {
+  opacity: 1;
 }
 
 /* Mobile */
@@ -694,6 +736,10 @@ footer {
     bottom: 18px;
     transform: scale(0.92);
     transform-origin: bottom left;
+  }
+
+  #lamp:hover {
+    transform: translateY(-2px) scale(0.94);
   }
 }
 
